@@ -44,7 +44,7 @@ prehashed = {}
 def init_prehashed():
     for x in [EMPTY, TERMINAL, MIDDLE]:
         for y in [EMPTY, TERMINAL, MIDDLE]:
-            prehashed[x + y] = blake2b(bytes([0] * 30) + x + y)
+            prehashed[x + y] = blake2b(bytes([0] * 30) + x + y, digest_size=32)
 
 init_prehashed()
 
@@ -52,7 +52,7 @@ def hashdown(mystr):
     assert len(mystr) == 66
     h = prehashed[bytes(mystr[0:1] + mystr[33:34])].copy()
     h.update(mystr[1:33] + mystr[34:])
-    return h.digest()[:32]
+    return h.digest()
 
 def compress_root(mystr):
     assert len(mystr) == 33
@@ -61,7 +61,7 @@ def compress_root(mystr):
     if mystr[0:1] == EMPTY:
         assert mystr[1:] == BLANK
         return BLANK
-    return blake2b(mystr).digest()[:32]
+    return blake2b(mystr, digest_size=32).digest()
 
 def get_bit(mybytes, pos):
     assert len(mybytes) == 32

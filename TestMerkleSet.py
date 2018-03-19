@@ -9,7 +9,7 @@ def to_bytes(f, v):
 
 # Add numhashes things, only checking the hash halfway through to test lazy evaluation
 def _testlazy(numhashes, mset, roots, proofss):
-    hashes = [blake2b(to_bytes(i, 10)).digest()[:32] for i in range(numhashes)]
+    hashes = [blake2b(to_bytes(i, 10), digest_size=32).digest() for i in range(numhashes)]
     checkpoint = numhashes // 2
     for i in range(numhashes - 1):
         if i == checkpoint:
@@ -32,7 +32,7 @@ def _testlazy(numhashes, mset, roots, proofss):
                 assert proof == proofss[i][j]
 
 def _testmset(numhashes, mset, oldroots = None, oldproofss = None):
-    hashes = [blake2b(to_bytes(i, 10)).digest()[:32] for i in range(numhashes)]
+    hashes = [blake2b(to_bytes(i, 10), digest_size=32).digest() for i in range(numhashes)]
     if oldroots is None:
         making_new = True
         roots = []
